@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puglia & Basilicata Tours — Giuseppe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pietra:#F5F0E4;
+    --pietra-alt:#EDE5D2;
+    --calce:#FFFCF6;
+    --inchiostro:#122536;
+    --inchiostro-2:#1B3A50;
+    --adriatico:#2C6E8E;
+    --adriatico-light:#5A96B3;
+    --ocra:#B9843B;
+    --ulivo:#5C6B47;
+    --line:rgba(18,37,54,0.12);
+    --shadow: 0 12px 32px rgba(18,37,54,0.10);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--pietra);
+    color:var(--inchiostro);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- topbar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 22px;
+    background:rgba(245,240,228,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:700; font-size:1.15rem;}
+  .brand svg{width:30px;height:30px;}
+  .lang-switch{display:flex; gap:4px; background:var(--pietra-alt); border-radius:999px; padding:4px;}
+  .lang-switch button{
+    border:none; background:transparent; padding:6px 12px; border-radius:999px;
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.06em;
+    cursor:pointer; color:var(--inchiostro-2); font-weight:500;
+    transition:background .2s, color .2s;
+  }
+  .lang-switch button.active{background:var(--inchiostro); color:var(--calce);}
+  .topbar-actions{display:flex; align-items:center; gap:14px;}
+  .cta-call{
+    display:flex; align-items:center; gap:7px;
+    background:var(--adriatico); color:#fff; border-radius:999px;
+    padding:9px 16px; font-size:0.82rem; font-weight:600; text-decoration:none;
+    white-space:nowrap;
+  }
+  .cta-call svg{width:14px;height:14px;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:linear-gradient(180deg, var(--inchiostro) 0%, var(--inchiostro-2) 100%);
+    color:var(--pietra);
+    padding:70px 22px 0;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-inner{max-width:920px; margin:0 auto; position:relative; z-index:2;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--adriatico-light); margin-bottom:18px; display:block;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 4.6rem);
+    line-height:1.02;
+    color:var(--calce);
+  }
+  .hero h1 em{color:var(--adriatico-light); font-style:italic; font-weight:500;}
+  .hero p.lede{
+    max-width:520px; margin-top:22px; font-size:1.05rem; line-height:1.55; color:#CBD9E1;
+  }
+  .hero-stats{display:flex; gap:34px; margin-top:38px; flex-wrap:wrap;}
+  .hero-stats div{border-left:2px solid var(--adriatico); padding-left:12px;}
+  .hero-stats .num{font-family:'Fraunces',serif; font-size:1.6rem; font-weight:700; color:var(--calce); display:block;}
+  .hero-stats .lab{font-size:0.74rem; color:#9FB4C2; text-transform:uppercase; letter-spacing:0.05em;}
+
+  .skyline{width:100%; height:auto; display:block; margin-top:54px;}
+
+  /* ---------- catalog ---------- */
+  .catalog{max-width:1080px; margin:0 auto; padding:64px 22px 20px;}
+  .section-head{max-width:640px; margin-bottom:44px;}
+  .section-head .eyebrow{color:var(--ocra);}
+  .section-head h2{font-size:clamp(1.7rem,3.4vw,2.4rem); color:var(--inchiostro);}
+  .section-head p{margin-top:12px; color:#4B5A66; line-height:1.55;}
+
+  .tour-card{
+    background:var(--calce);
+    border:1px solid var(--line);
+    border-radius:22px;
+    margin-bottom:26px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .tour-head{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:20px;
+    padding:30px 30px 22px;
+    cursor:pointer;
+  }
+  .tour-head-left{display:flex; gap:20px; align-items:flex-start;}
+  .tour-icon{
+    flex:none; width:56px;height:56px; border-radius:16px;
+    background:var(--pietra-alt); display:flex; align-items:center; justify-content:center;
+  }
+  .tour-icon svg{width:30px;height:30px;}
+  .tour-title-wrap .kicker{font-family:'IBM Plex Mono',monospace; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--adriatico); display:block; margin-bottom:4px;}
+  .tour-title-wrap h3{font-size:1.5rem; color:var(--inchiostro);}
+  .tour-title-wrap .subtitle{color:#5C6B78; font-size:0.92rem; margin-top:4px;}
+  .tour-badge{
+    flex:none; text-align:right;
+  }
+  .tour-badge .duration{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; background:var(--pietra-alt);
+    padding:6px 12px; border-radius:999px; color:var(--inchiostro-2); white-space:nowrap;
+  }
+  .chevron{width:18px;height:18px; margin-top:10px; transition:transform .25s ease; color:#8895A0;}
+  .tour-card.open .chevron{transform:rotate(180deg);}
+
+  .route-strip{
+    display:flex; align-items:center; gap:0; padding:0 30px 22px; flex-wrap:wrap;
+  }
+  .route-stop{display:flex; align-items:center; gap:8px;}
+  .route-dot{width:9px;height:9px;border-radius:50%; background:var(--ocra); flex:none;}
+  .route-name{font-size:0.86rem; font-weight:600; color:var(--inchiostro-2); white-space:nowrap;}
+  .route-line{width:34px; height:1px; background:repeating-linear-gradient(90deg, var(--ocra) 0 5px, transparent 5px 9px); margin:0 8px;}
+
+  .tour-body{
+    max-height:0; overflow:hidden; transition:max-height .4s ease;
+    border-top:1px solid var(--line);
+  }
+  .tour-card.open .tour-body{max-height:3200px;}
+  .tour-body-inner{padding:26px 30px 34px;}
+
+  .stop-block{
+    display:grid; grid-template-columns:44px 1fr; gap:16px;
+    padding:16px 0; border-bottom:1px dashed var(--line);
+  }
+  .stop-block:last-child{border-bottom:none;}
+  .stop-num{
+    width:44px;height:44px;border-radius:12px;background:var(--pietra-alt);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:700; color:var(--adriatico); font-size:1.05rem;
+  }
+  .stop-block h4{font-size:1.06rem; color:var(--inchiostro); margin-bottom:6px;}
+  .stop-block .time{font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--ocra); margin-right:8px;}
+  .stop-block p{margin:0; color:#4B5A66; font-size:0.92rem; line-height:1.55;}
+  .stop-block .caption{margin-top:6px; font-style:italic; color:#7A8894; font-size:0.84rem;}
+  .highlight-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+  .highlight-tags span{
+    font-size:0.74rem; background:rgba(44,110,142,0.09); color:var(--adriatico);
+    padding:4px 10px; border-radius:999px; font-weight:500;
+  }
+
+  .tour-footer-note{
+    background:var(--pietra-alt); border-radius:14px; padding:16px 18px; margin-top:20px;
+    font-size:0.88rem; color:#4B5A66; line-height:1.5;
+  }
+  .tour-footer-note strong{color:var(--inchiostro-2);}
+
+  .book-row{display:flex; gap:12px; margin-top:22px; flex-wrap:wrap;}
+  .btn-primary, .btn-secondary{
+    padding:12px 20px; border-radius:12px; font-weight:600; font-size:0.9rem;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:none;
+  }
+  .btn-primary{background:var(--inchiostro); color:var(--calce);}
+  .btn-secondary{background:transparent; color:var(--inchiostro-2); border:1px solid var(--line);}
+  .btn-primary svg,.btn-secondary svg{width:15px;height:15px;}
+
+  /* ---------- why ---------- */
+  .why{background:var(--inchiostro-2); color:var(--pietra); padding:72px 22px; margin-top:40px;}
+  .why-inner{max-width:1080px; margin:0 auto;}
+  .why h2{color:var(--calce); font-size:clamp(1.6rem,3vw,2.2rem); max-width:600px;}
+  .why-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:26px; margin-top:40px;}
+  .why-item{border-top:2px solid var(--adriatico); padding-top:14px;}
+  .why-item h4{font-family:'Fraunces',serif; font-size:1.1rem; color:var(--calce); margin-bottom:8px;}
+  .why-item p{font-size:0.88rem; color:#B7C6D0; line-height:1.55; margin:0;}
+
+  /* ---------- footer / contact ---------- */
+  .contact{max-width:1080px; margin:0 auto; padding:70px 22px 90px; text-align:center;}
+  .contact .eyebrow{color:var(--ocra); justify-content:center; display:flex;}
+  .contact h2{font-size:clamp(1.9rem,4.6vw,3rem); max-width:620px; margin:14px auto 0;}
+  .contact p.sub{max-width:460px; margin:18px auto 0; color:#4B5A66; line-height:1.55;}
+  .contact-actions{display:flex; gap:14px; justify-content:center; margin-top:30px; flex-wrap:wrap;}
+  .contact-actions a{
+    display:inline-flex; align-items:center; gap:9px; padding:14px 24px; border-radius:14px;
+    font-weight:600; text-decoration:none; font-size:0.95rem;
+  }
+  .contact-actions .whatsapp{background:#25D366; color:#0b3b1e;}
+  .contact-actions .call{background:var(--inchiostro); color:var(--calce);}
+  .contact-actions svg{width:18px;height:18px;}
+  .footer-meta{margin-top:60px; padding-top:24px; border-top:1px solid var(--line); font-size:0.78rem; color:#8895A0;}
+
+  @media(max-width:640px){
+    .tour-head{flex-direction:column;}
+    .tour-badge{text-align:left;}
+    .route-strip{padding:0 22px 18px;}
+    .tour-body-inner{padding:22px 22px 28px;}
+    .tour-head{padding:24px 22px 18px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 40 40" fill="none"><path d="M2 30 Q10 24 18 30 T34 30" stroke="#2C6E8E" stroke-width="2.4" stroke-linecap="round"/><path d="M10 18 L14 10 L18 18 Z" fill="#B9843B"/><rect x="12.6" y="15" width="2.8" height="3" fill="#122536"/><path d="M22 18 L26 8 L30 18 Z" fill="#122536"/><rect x="24.6" y="14" width="2.8" height="4" fill="#F5F0E4"/></svg>
+    <span data-i18n="brand">Puglia Autentica</span>
+  </div>
+  <div class="topbar-actions">
+    <div class="lang-switch" id="langSwitch">
+      <button data-lang="it" class="active">IT</button>
+      <button data-lang="en">EN</button>
+      <button data-lang="nl">NL</button>
+    </div>
+    <a class="cta-call" href="https://wa.me/393338550940" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.9-1.4A10 10 0 1012 2zm5.8 14.2c-.3.7-1.5 1.4-2.1 1.5-.6.1-1.2.2-4-.9-3.4-1.4-5.5-4.8-5.7-5-.2-.2-1.3-1.7-1.3-3.3 0-1.6.8-2.3 1.1-2.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.3.6.9 2.2 1 2.3.1.2.1.4 0 .6-.1.2-.2.3-.4.5-.2.2-.4.4-.5.6-.2.2-.4.4-.2.7.2.3 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.3.2.5.1.7-.1.2-.2.9-1 1.1-1.4.2-.3.5-.3.8-.2.3.1 1.9.9 2.2 1.1.3.1.5.2.6.4.1.2.1.9-.2 1.6z"/></svg>
+      <span data-i18n="topbarCta">Prenota</span>
+    </a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow" data-i18n="heroEyebrow">Tour guidati · Puglia & Basilicata</span>
+    <h1 data-i18n-html="heroTitle">Il Sud, <em>in un giorno.</em></h1>
+    <p class="lede" data-i18n="heroLede">Cinque itinerari guidati tra borghi bianchi, cattedrali barocche, trulli e Sassi patrimonio UNESCO. Ogni tour è pensato per essere vissuto — e capito — in una sola giornata.</p>
+    <div class="hero-stats">
+      <div><span class="num">5</span><span class="lab" data-i18n="statTours">Tour guidati</span></div>
+      <div><span class="num">13</span><span class="lab" data-i18n="statTowns">Città e borghi</span></div>
+      <div><span class="num">3</span><span class="lab" data-i18n="statLangs">Lingue parlate</span></div>
+    </div>
+  </div>
+  <svg class="skyline" viewBox="0 0 1200 160" preserveAspectRatio="none">
+    <rect width="1200" height="160" fill="none"/>
+    <path d="M0 140 Q40 120 80 140 T160 140 T240 140 T320 140 T400 140 T480 140 T560 140 T640 140 T720 140 T800 140 T880 140 T960 140 T1040 140 T1120 140 T1200 140 V160 H0 Z" fill="#193B52"/>
+    <!-- trulli -->
+    <g fill="#0F2536">
+      <path d="M60 140 L60 118 Q70 100 80 118 L80 140 Z"/><circle cx="70" cy="99" r="3" fill="#B9843B"/>
+      <path d="M95 140 L95 122 Q104 106 113 122 L113 140 Z"/>
+      <path d="M300 140 L300 115 Q312 94 324 115 L324 140 Z"/><circle cx="312" cy="94" r="3" fill="#B9843B"/>
+      <path d="M335 140 L335 124 Q343 110 351 124 L351 140 Z"/>
+      <!-- Lecce baroque campanile -->
+      <rect x="520" y="90" width="14" height="50"/><rect x="514" y="82" width="26" height="10"/><polygon points="527,60 517,82 537,82"/>
+      <!-- Bari basilica towers -->
+      <rect x="640" y="95" width="10" height="45"/><rect x="668" y="95" width="10" height="45"/><polygon points="645,85 640,95 650,95"/><polygon points="673,85 668,95 678,95"/>
+      <!-- Matera sassi cluster -->
+      <path d="M820 140 L820 108 Q838 96 856 108 L856 140Z"/>
+      <path d="M860 140 L860 116 Q872 104 884 116 L884 140Z"/>
+      <path d="M888 140 L888 122 Q898 112 908 122 L908 140Z"/>
+      <!-- Gravina aqueduct arches -->
+      <path d="M1000 140 V116 A18 18 0 0 1 1036 116 V140" fill="none" stroke="#0F2536" stroke-width="8"/>
+      <path d="M1040 140 V116 A18 18 0 0 1 1076 116 V140" fill="none" stroke="#0F2536" stroke-width="8"/>
+    </g>
+    <path d="M0 150 Q60 142 120 150 T240 150 T360 150 T480 150 T600 150 T720 150 T840 150 T960 150 T1080 150 T1200 150 V160H0Z" fill="#2C6E8E" opacity="0.55"/>
+  </svg>
+</section>
+
+<main class="catalog">
+  <div class="section-head">
+    <span class="eyebrow" data-i18n="catalogEyebrow">Il catalogo</span>
+    <h2 data-i18n="catalogTitle">Scegli il tuo itinerario</h2>
+    <p data-i18n="catalogSub">Ogni card mostra le tappe nell'ordine in cui le visiterai. Tocca un tour per aprire il programma completo.</p>
+  </div>
+
+  <div id="tourList"></div>
+</main>
+
+<section class="why">
+  <div class="why-inner">
+    <h2 data-i18n="whyTitle">Perché viaggiare con Giuseppe</h2>
+    <div class="why-grid">
+      <div class="why-item">
+        <h4 data-i18n="why1h">Guida locale, non un autobus</h4>
+        <p data-i18n="why1p">Piccoli gruppi, ritmo umano: il tempo per fermarsi dove conta davvero.</p>
+      </div>
+      <div class="why-item">
+        <h4 data-i18n="why2h">Tre lingue, una sola voce</h4>
+        <p data-i18n="why2p">Racconto in italiano, inglese e olandese, senza perdere i dettagli.</p>
+      </div>
+      <div class="why-item">
+        <h4 data-i18n="why3h">Itinerari testati</h4>
+        <p data-i18n="why3p">Ogni percorso è calcolato per essere vissuto — non solo attraversato — in un giorno.</p>
+      </div>
+      <div class="why-item">
+        <h4 data-i18n="why4h">Prenotazione diretta</h4>
+        <p data-i18n="why4p">Nessun intermediario: scrivi o chiama direttamente Giuseppe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <span class="eyebrow" data-i18n="contactEyebrow">Prenota</span>
+  <h2 data-i18n="contactTitle">Raccontaci quando arrivi, penseremo al resto.</h2>
+  <p class="sub" data-i18n="contactSub">Scrivi su WhatsApp o chiama per bloccare la data: risposta rapida, disponibilità in tempo reale.</p>
+  <div class="contact-actions">
+    <a class="whatsapp" href="https://wa.me/393338550940" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.9-1.4A10 10 0 1012 2zm5.8 14.2c-.3.7-1.5 1.4-2.1 1.5-.6.1-1.2.2-4-.9-3.4-1.4-5.5-4.8-5.7-5-.2-.2-1.3-1.7-1.3-3.3 0-1.6.8-2.3 1.1-2.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.3.6.9 2.2 1 2.3.1.2.1.4 0 .6-.1.2-.2.3-.4.5-.2.2-.4.4-.5.6-.2.2-.4.4-.2.7.2.3 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.3.2.5.1.7-.1.2-.2.9-1 1.1-1.4.2-.3.5-.3.8-.2.3.1 1.9.9 2.2 1.1.3.1.5.2.6.4.1.2.1.9-.2 1.6z"/></svg>
+      WhatsApp
+    </a>
+    <a class="call" href="tel:+393338550940">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.4 2.1L8 10a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.9.5 2.9.6a2 2 0 011.7 2z"/></svg>
+      +39 333 855 0940
+    </a>
+  </div>
+  <div class="footer-meta" data-i18n="footerMeta">Giuseppe · Guida turistica · Puglia & Basilicata, Italia</div>
+</section>
+
+<script>
+const DATA = {
+  it: {
+    brand:"Puglia Autentica",
+    topbarCta:"Prenota",
+    heroEyebrow:"Tour guidati · Puglia & Basilicata",
+    heroTitle:"Il Sud, <em>in un giorno.</em>",
+    heroLede:"Cinque itinerari guidati tra borghi bianchi, cattedrali barocche, trulli e Sassi patrimonio UNESCO. Ogni tour è pensato per essere vissuto — e capito — in una sola giornata.",
+    statTours:"Tour guidati", statTowns:"Città e borghi", statLangs:"Lingue parlate",
+    catalogEyebrow:"Il catalogo", catalogTitle:"Scegli il tuo itinerario",
+    catalogSub:"Ogni card mostra le tappe nell'ordine in cui le visiterai. Tocca un tour per aprire il programma completo.",
+    whyTitle:"Perché viaggiare con Giuseppe",
+    why1h:"Guida locale, non un autobus", why1p:"Piccoli gruppi, ritmo umano: il tempo per fermarsi dove conta davvero.",
+    why2h:"Tre lingue, una sola voce", why2p:"Racconto in italiano, inglese e olandese, senza perdere i dettagli.",
+    why3h:"Itinerari testati", why3p:"Ogni percorso è calcolato per essere vissuto — non solo attraversato — in un giorno.",
+    why4h:"Prenotazione diretta", why4p:"Nessun intermediario: scrivi o chiama direttamente Giuseppe.",
+    contactEyebrow:"Prenota",
+    contactTitle:"Raccontaci quando arrivi, penseremo al resto.",
+    contactSub:"Scrivi su WhatsApp o chiama per bloccare la data: risposta rapida, disponibilità in tempo reale.",
+    footerMeta:"Giuseppe · Guida turistica · Puglia & Basilicata, Italia",
+    durationLabel:"1 giorno · guida inclusa",
+    detailsBtn:"Programma completo", bookBtn:"Prenota questo tour",
+    tours:[
+      {
+        kicker:"Costa e borghi", title:"Puglia Experience", subtitle:"Monopoli · Polignano a Mare · Conversano",
+        icon:"wave",
+        note:"Un itinerario tra mare cristallino, storia millenaria e borghi incantevoli nel cuore della Puglia.",
+        stops:[
+          {name:"Monopoli", title:"Il fascino marinaro", text:"Il Castello Carlo V, il Porto Vecchio con le tipiche barche blu (gozzi), la Basilica Cattedrale della Madonna della Madia e le mura affacciate sul mare.", caption:"Vista panoramica del porto e delle antiche mura fortificate sul mare cristallino.", tags:["Castello Carlo V","Porto Vecchio","Cattedrale"]},
+          {name:"Polignano a Mare", title:"La perla dell'Adriatico", text:"Lama Monachile con il suo iconico ponte romano, il centro storico ricco di poesie scritte sui muri, la statua di Domenico Modugno e le grotte marine.", caption:"La caletta di Lama Monachile racchiusa tra scogliere a picco sul mare.", tags:["Lama Monachile","Centro storico","Grotte marine"]},
+          {name:"Conversano", title:"Città d'arte e storia", text:"L'imponente Castello Aragonese, la maestosa Cattedrale romanica, il borgo medievale e il Monastero di San Benedetto.", caption:"Il Castello Aragonese illuminato di notte, simbolo storico della città.", tags:["Castello Aragonese","Cattedrale","Borgo medievale"]}
+        ]
+      },
+      {
+        kicker:"Barocco leccese", title:"Lecce in un giorno", subtitle:"La Firenze del Sud",
+        icon:"arch",
+        note:"Un giro tra le meraviglie del barocco leccese, tra pietra scolpita e piazze monumentali.",
+        stops:[
+          {name:"Piazza del Duomo", title:"Il cuore barocco", text:"Spettacolo barocco con la Cattedrale e il Palazzo Vescovile, il cuore religioso e artistico della città.", caption:"Vista notturna di Piazza del Duomo, il cuore del barocco leccese illuminato.", tags:["Cattedrale","Palazzo Vescovile"]},
+          {name:"Basilica di Santa Croce", title:"Capolavoro di pietra", text:"Capolavoro della pietra leccese, ricca di decorazioni e simbolo del barocco pugliese.", tags:["Pietra leccese","Facciata scolpita"]},
+          {name:"Anfiteatro Romano", title:"Le radici antiche", text:"Sito archeologico nel cuore di Piazza Sant'Oronzo, testimonianza della Lecce romana.", tags:["Sito archeologico"]},
+          {name:"Castello Carlo V", title:"La fortezza", text:"Maestosa fortezza difensiva nel centro storico, oggi spazio culturale ed espositivo.", tags:["Fortezza storica"]},
+          {name:"Passeggiata tra i vicoli", title:"Botteghe artigiane", text:"Botteghe artigiane di cartapesta e pietra leccese lungo le stradine del centro.", tags:["Artigianato","Cartapesta"]}
+        ]
+      },
+      {
+        kicker:"Città capoluogo", title:"Bari in un giorno", subtitle:"Bari Vecchia e il borgo murattiano",
+        icon:"basilica",
+        note:"Scopri le meraviglie di Bari Vecchia e del borgo murattiano in un'esperienza indimenticabile, con un programma orario dettagliato.",
+        stops:[
+          {name:"Basilica di San Nicola", title:"Capolavoro romanico pugliese", text:"Visita alla cripta con le reliquie del Santo e la splendida Cattedra di Abbone.", time:"09:00 – 10:30", tags:["Cripta","Cattedra di Abbone"]},
+          {name:"Cattedrale di San Sabino", title:"Il rosone maestoso", text:"Splendido esempio di romanico pugliese con il maestoso rosone e il succorpo.", time:"10:30 – 11:30", tags:["Romanico pugliese"]},
+          {name:"Castello Normanno-Svevo", title:"La fortezza sul mare", text:"Imponente fortezza affacciata sul mare, simbolo del potere difensivo medievale.", time:"11:30 – 13:00", tags:["Fortezza medievale"]},
+          {name:"Pranzo e Arco Basso", title:"Le orecchiette di Bari Vecchia", text:"Passeggiata tra le orecchiette fatte a mano e le viuzze storiche di Bari Vecchia.", time:"13:00 – 15:00", tags:["Street food","Orecchiette"]},
+          {name:"Teatro Petruzzelli & Lungomare", title:"Musica e mare", text:"Visita al celebre teatro lirico e passeggiata sul lungomare più lungo d'Europa.", time:"15:00 – 17:00", tags:["Teatro Petruzzelli","Lungomare"]}
+        ]
+      },
+      {
+        kicker:"Trulli e barocco", title:"Valle d'Itria", subtitle:"Alberobello · Locorotondo · Martina Franca",
+        icon:"trullo",
+        note:"È perfettamente possibile visitare le tre perle della Valle d'Itria in una sola giornata: i trulli UNESCO, il borgo bianco e il barocco martinese, a soli 10-15 minuti l'uno dall'altro.",
+        stops:[
+          {name:"Alberobello", title:"La capitale dei trulli · UNESCO", text:"Rione Monti e Aia Piccola con oltre 1.000 trulli storici, il Trullo Sovrano a due piani e la Chiesa di Sant'Antonio a forma di trullo.", caption:"Vista panoramica del centro storico con le tipiche abitazioni coniche in pietra.", tags:["Rione Monti","Trullo Sovrano","UNESCO"]},
+          {name:"Locorotondo", title:"Uno dei borghi più belli d'Italia", text:"Centro storico circolare con vicoli bianchi e fioriti, le tipiche case a \"cummerse\" e un belvedere mozzafiato sulla valle.", caption:"Lo skyline di Locorotondo al tramonto, immerso nei vigneti della valle.", tags:["Centro circolare","Cummerse","Belvedere"]},
+          {name:"Martina Franca", title:"L'eleganza del barocco", text:"La Basilica di San Martino, Piazza Maria Immacolata con i portici semicircolari e il Palazzo Ducale con le sale affrescate.", caption:"Piazza Maria Immacolata illuminata di sera, capolavoro del barocco martinese.", tags:["Basilica San Martino","Palazzo Ducale"]}
+        ]
+      },
+      {
+        kicker:"Sassi e Murgia", title:"Matera, Altamura & Gravina", subtitle:"Tra Basilicata e Puglia",
+        icon:"cave",
+        note:"Un'esperienza unica ed emozionante per esplorare in un solo giorno tre gioielli mozzafiato tra Basilicata e Puglia, con degustazione di pane e prodotti tipici su richiesta.",
+        stops:[
+          {name:"Matera", title:"Città dei Sassi · UNESCO", text:"Celebre per i suggestivi Sassi, patrimonio UNESCO e Capitale Europea della Cultura 2019. Case-grotte, Chiese Rupestri affrescate e viste sul canyon del Gravina.", caption:"Vista panoramica dei Sassi al tramonto.", tags:["Sassi","Chiese Rupestri","UNESCO"]},
+          {name:"Altamura", title:"La leonessa di Puglia", text:"La maestosa Cattedrale federiciana (1232) e il celebre Pane DOP di Altamura. Il centro storico con i caratteristici \"claustri\".", caption:"La Cattedrale di Santa Maria Assunta.", tags:["Cattedrale federiciana","Pane DOP"]},
+          {name:"Gravina in Puglia", title:"La città sul canyon", text:"Il Ponte Viadotto Acquedotto a due ordini di archi (set di James Bond), la Gravina Sotterranea e la Chiesa Rupestre di San Michele.", caption:"Lo storico Ponte Acquedotto.", tags:["Ponte Acquedotto","Gravina Sotterranea"]}
+        ]
+      }
+    ]
+  },
+  en:{
+    brand:"Puglia Autentica",
+    topbarCta:"Book now",
+    heroEyebrow:"Guided tours · Puglia & Basilicata",
+    heroTitle:"Southern Italy, <em>in one day.</em>",
+    heroLede:"Five guided itineraries through whitewashed villages, Baroque cathedrals, trulli and UNESCO cave-towns. Every tour is designed to be experienced — and understood — in a single day.",
+    statTours:"Guided tours", statTowns:"Towns & villages", statLangs:"Languages spoken",
+    catalogEyebrow:"The catalogue", catalogTitle:"Choose your itinerary",
+    catalogSub:"Each card shows the stops in the order you'll visit them. Tap a tour to open the full programme.",
+    whyTitle:"Why travel with Giuseppe",
+    why1h:"A local guide, not a bus", why1p:"Small groups, human pace: time to stop where it really matters.",
+    why2h:"Three languages, one voice", why2p:"Storytelling in Italian, English and Dutch, without losing the details.",
+    why3h:"Tested itineraries", why3p:"Every route is designed to be lived — not just crossed — in a single day.",
+    why4h:"Direct booking", why4p:"No middleman: message or call Giuseppe directly.",
+    contactEyebrow:"Book",
+    contactTitle:"Tell us when you're arriving, we'll take care of the rest.",
+    contactSub:"Message on WhatsApp or call to lock in your date: quick reply, real-time availability.",
+    footerMeta:"Giuseppe · Licensed tour guide · Puglia & Basilicata, Italy",
+    durationLabel:"1 day · guide included",
+    detailsBtn:"Full programme", bookBtn:"Book this tour",
+    tours:[
+      {
+        kicker:"Coast & villages", title:"Puglia Experience", subtitle:"Monopoli · Polignano a Mare · Conversano",
+        icon:"wave",
+        note:"A journey through crystal-clear waters, ancient history and charming villages in the heart of Puglia.",
+        stops:[
+          {name:"Monopoli", title:"Seafaring charm", text:"Charles V Castle, the Old Port with traditional blue wooden boats, the Cathedral of Madonna della Madia, and the walls overlooking the sea.", caption:"Panoramic view of the historic port and defensive walls reflecting the turquoise Adriatic.", tags:["Charles V Castle","Old Port","Cathedral"]},
+          {name:"Polignano a Mare", title:"Pearl of the Adriatic", text:"Lama Monachile cove with its iconic Roman bridge, the historic center lined with poetry, the Domenico Modugno statue, and sea caves.", caption:"Lama Monachile cove nestled between dramatic limestone cliffs.", tags:["Lama Monachile","Old town","Sea caves"]},
+          {name:"Conversano", title:"City of art and history", text:"The imposing Aragonese Castle, the Romanesque Cathedral, the medieval old town and the Monastery of San Benedetto.", caption:"The Aragonese Castle illuminated at night, a historic landmark.", tags:["Aragonese Castle","Cathedral","Medieval town"]}
+        ]
+      },
+      {
+        kicker:"Lecce Baroque", title:"Lecce in a day", subtitle:"The Florence of the South",
+        icon:"arch",
+        note:"A tour through the wonders of Lecce Baroque, carved stone and monumental squares.",
+        stops:[
+          {name:"Piazza del Duomo", title:"The Baroque heart", text:"A Baroque masterpiece featuring the Cathedral and the Bishop's Palace, the artistic heart of the city.", caption:"Night view of Piazza del Duomo, the illuminated heart of Lecce Baroque.", tags:["Cathedral","Bishop's Palace"]},
+          {name:"Basilica di Santa Croce", title:"A masterpiece in stone", text:"A stunning example of Lecce stone carving and detail, a symbol of Apulian Baroque.", tags:["Lecce stone","Carved facade"]},
+          {name:"Roman Amphitheater", title:"Ancient roots", text:"Ancient ruins located right in the heart of Piazza Sant'Oronzo.", tags:["Archaeological site"]},
+          {name:"Charles V Castle", title:"The fortress", text:"An imposing historic fortress in the old town, now a cultural and exhibition space.", tags:["Historic fortress"]},
+          {name:"Historic center stroll", title:"Traditional workshops", text:"Discover traditional papier-mâché and stone workshops along the alleyways.", tags:["Craftsmanship","Papier-mâché"]}
+        ]
+      },
+      {
+        kicker:"Capital city", title:"Bari in a day", subtitle:"Old Bari and the Murattian district",
+        icon:"basilica",
+        note:"Discover the wonders of Bari Vecchia and the Murattian district in an unforgettable experience, with a detailed hourly schedule.",
+        stops:[
+          {name:"Basilica of Saint Nicholas", title:"A masterpiece of Apulian Romanesque", text:"Visit the crypt with the Saint's relics and the stunning Abbot's Chair.", time:"09:00 – 10:30", tags:["Crypt","Abbot's Chair"]},
+          {name:"Cathedral of Saint Sabinus", title:"The majestic rose window", text:"A magnificent example of Apulian Romanesque architecture with its majestic rose window.", time:"10:30 – 11:30", tags:["Apulian Romanesque"]},
+          {name:"Norman-Swabian Castle", title:"The fortress on the sea", text:"An imposing fortress overlooking the sea, symbol of medieval defensive power.", time:"11:30 – 13:00", tags:["Medieval fortress"]},
+          {name:"Lunch & Orecchiette Alley", title:"Bari Vecchia's handmade pasta", text:"Stroll through historic alleys watching local women handmake fresh orecchiette.", time:"13:00 – 15:00", tags:["Street food","Orecchiette"]},
+          {name:"Petruzzelli Theatre & Seafront", title:"Music and sea", text:"Tour the famous opera house and enjoy a relaxing walk along the seafront.", time:"15:00 – 17:00", tags:["Petruzzelli Theatre","Seafront"]}
+        ]
+      },
+      {
+        kicker:"Trulli & Baroque", title:"Itria Valley", subtitle:"Alberobello · Locorotondo · Martina Franca",
+        icon:"trullo",
+        note:"It's completely feasible to visit all three pearls of the Itria Valley in a single day — UNESCO trulli, a hilltop white village and Baroque elegance, just 10–15 minutes apart.",
+        stops:[
+          {name:"Alberobello", title:"The trulli capital · UNESCO", text:"Rione Monti and Aia Piccola with over 1,000 iconic trulli, the two-story Trullo Sovrano and the trullo-shaped Church of St. Anthony.", caption:"Panoramic view of the historic center with iconic conical stone trulli.", tags:["Rione Monti","Trullo Sovrano","UNESCO"]},
+          {name:"Locorotondo", title:"One of Italy's most beautiful villages", text:"A circular old town with picturesque white flower-lined alleys, traditional \"cummerse\" houses, and a panoramic viewpoint over the valley.", caption:"Locorotondo's skyline at sunset, surrounded by lush vineyards.", tags:["Circular old town","Cummerse","Viewpoint"]},
+          {name:"Martina Franca", title:"Baroque elegance", text:"The Basilica of San Martino, Piazza Maria Immacolata with its semicircular arcades, and the Palazzo Ducale with frescoed rooms.", caption:"Piazza Maria Immacolata illuminated at night, a Baroque masterpiece.", tags:["Basilica San Martino","Palazzo Ducale"]}
+        ]
+      },
+      {
+        kicker:"Sassi & Murgia", title:"Matera, Altamura & Gravina", subtitle:"Between Basilicata and Apulia",
+        icon:"cave",
+        note:"A unique, guided one-day experience to explore three breathtaking gems between Basilicata and Apulia, with local bread and product tasting on request.",
+        stops:[
+          {name:"Matera", title:"City of the Sassi · UNESCO", text:"World-famous for its ancient Sassi cave dwellings, a UNESCO site and 2019 European Capital of Culture. Rock-hewn churches with frescoes and dramatic canyon views.", caption:"Panoramic view of the Sassi at sunset.", tags:["Sassi","Rock churches","UNESCO"]},
+          {name:"Altamura", title:"The Lioness of Puglia", text:"The impressive Romanesque Cathedral built by Emperor Frederick II (1232) and the world-famous PDO sourdough bread. The old town's unique \"claustri\" courtyards.", caption:"Cathedral of Santa Maria Assunta.", tags:["Romanesque cathedral","PDO bread"]},
+          {name:"Gravina in Puglia", title:"The city on the canyon", text:"The famous Aqueduct Bridge with its two tiers of arches (featured in James Bond), Underground Gravina, and the rock church of San Michele.", caption:"The historic Aqueduct Bridge.", tags:["Aqueduct Bridge","Underground Gravina"]}
+        ]
+      }
+    ]
+  },
+  nl:{
+    brand:"Puglia Autentica",
+    topbarCta:"Boek nu",
+    heroEyebrow:"Begeleide tours · Puglia & Basilicata",
+    heroTitle:"Zuid-Italië, <em>in één dag.</em>",
+    heroLede:"Vijf begeleide routes langs witte dorpjes, barokke kathedralen, trulli en UNESCO-grotwoningen. Elke tour is ontworpen om in één dag echt beleefd — en begrepen — te worden.",
+    statTours:"Begeleide tours", statTowns:"Steden en dorpen", statLangs:"Gesproken talen",
+    catalogEyebrow:"De catalogus", catalogTitle:"Kies jouw route",
+    catalogSub:"Elke kaart toont de stops in de volgorde waarin je ze bezoekt. Tik op een tour om het volledige programma te openen.",
+    whyTitle:"Waarom reizen met Giuseppe",
+    why1h:"Een lokale gids, geen bus", why1p:"Kleine groepen, menselijk tempo: tijd om te stoppen waar het er echt toe doet.",
+    why2h:"Drie talen, één stem", why2p:"Verhalen in het Italiaans, Engels en Nederlands, zonder de details te verliezen.",
+    why3h:"Geteste routes", why3p:"Elke route is ontworpen om beleefd te worden — niet alleen doorkruist — in één dag.",
+    why4h:"Direct boeken", why4p:"Geen tussenpersoon: stuur een bericht of bel Giuseppe rechtstreeks.",
+    contactEyebrow:"Boek",
+    contactTitle:"Laat ons weten wanneer je aankomt, wij regelen de rest.",
+    contactSub:"Stuur een bericht via WhatsApp of bel om je datum vast te leggen: snel antwoord, realtime beschikbaarheid.",
+    footerMeta:"Giuseppe · Erkende reisgids · Puglia & Basilicata, Italië",
+    durationLabel:"1 dag · gids inbegrepen",
+    detailsBtn:"Volledig programma", bookBtn:"Boek deze tour",
+    tours:[
+      {
+        kicker:"Kust en dorpen", title:"Puglia Experience", subtitle:"Monopoli · Polignano a Mare · Conversano",
+        icon:"wave",
+        note:"Een reis langs kristalheldere wateren, eeuwenoude geschiedenis en charmante dorpjes in het hart van Apulië.",
+        stops:[
+          {name:"Monopoli", title:"Maritieme charme", text:"Het Karel V Kasteel, de Oude Haven met traditionele blauwe boten, de kathedraal van de Madonna della Madia en de muren met uitzicht op zee.", caption:"Panoramisch uitzicht op de historische haven en vestingmuren aan de Adriatische Zee.", tags:["Karel V Kasteel","Oude Haven","Kathedraal"]},
+          {name:"Polignano a Mare", title:"Parel van de Adriatische Zee", text:"De baai Lama Monachile met zijn iconische Romeinse brug, het historische centrum vol poëzie, het standbeeld van Domenico Modugno en indrukwekkende zeegrotten.", caption:"De inham van Lama Monachile omringd door steile kalkstenen kliffen.", tags:["Lama Monachile","Historisch centrum","Zeegrotten"]},
+          {name:"Conversano", title:"Stad van kunst en geschiedenis", text:"Het indrukwekkende Aragonese Kasteel, de romaanse kathedraal, het middeleeuwse centrum en het klooster van San Benedetto.", caption:"Het Aragonese Kasteel 's nachts verlicht, historisch symbool van de stad.", tags:["Aragonees Kasteel","Kathedraal","Middeleeuws centrum"]}
+        ]
+      },
+      {
+        kicker:"Barok van Lecce", title:"Lecce in één dag", subtitle:"Het Florence van het Zuiden",
+        icon:"arch",
+        note:"Een tocht langs de wonderen van de Lecce-barok, gebeeldhouwde steen en monumentale pleinen.",
+        stops:[
+          {name:"Piazza del Duomo", title:"Het barokke hart", text:"Barokhoogtepunt met de kathedraal en het bisschoppelijk paleis, het artistieke hart van de stad.", caption:"Nachtelijk uitzicht op de Piazza del Duomo, het verlichte hart van de Lecce-barok.", tags:["Kathedraal","Bisschoppelijk paleis"]},
+          {name:"Basilica di Santa Croce", title:"Een meesterwerk in steen", text:"Een prachtig voorbeeld van beeldhouwkunst in Lecce-steen, symbool van de Apulische barok.", tags:["Lecce-steen","Gebeeldhouwde gevel"]},
+          {name:"Romeins Amfitheater", title:"Oude wortels", text:"Oude opgravingen midden in het hart van Piazza Sant'Oronzo.", tags:["Archeologische site"]},
+          {name:"Karel V Kasteel", title:"De vesting", text:"Een indrukwekkende historische vesting in het oude centrum, nu een culturele ruimte.", tags:["Historische vesting"]},
+          {name:"Wandeling door het centrum", title:"Traditionele ateliers", text:"Ontdek traditionele papier-maché- en steenateliers langs de steegjes.", tags:["Ambacht","Papier-maché"]}
+        ]
+      },
+      {
+        kicker:"Hoofdstad", title:"Bari in één dag", subtitle:"Oud-Bari en de Murattiaanse wijk",
+        icon:"basilica",
+        note:"Ontdek de wonderen van Bari Vecchia en de Murattiaanse wijk in een onvergetelijke ervaring, met een gedetailleerd uurschema.",
+        stops:[
+          {name:"Basiliek van Sint-Nicolaas", title:"Meesterwerk van de Apulische romaanse stijl", text:"Bezoek de crypte met de relikwieën van de heilige en de prachtige bisschopsstoel.", time:"09:00 – 10:30", tags:["Crypte","Bisschopsstoel"]},
+          {name:"Kathedraal van Sint-Sabinus", title:"Het majestueuze roosvenster", text:"Prachtig voorbeeld van Apulische romaanse architectuur met een majestueus roosvenster.", time:"10:30 – 11:30", tags:["Apulische romaanse stijl"]},
+          {name:"Normandisch-Zwabisch Kasteel", title:"De vesting aan zee", text:"Indrukwekkend fort aan zee, symbool van middeleeuwse verdedigingskracht.", time:"11:30 – 13:00", tags:["Middeleeuws fort"]},
+          {name:"Lunch & Orecchiette-steegje", title:"Handgemaakte pasta uit Bari Vecchia", text:"Wandeling door historische steegjes waar vrouwen verse orecchiette met de hand maken.", time:"13:00 – 15:00", tags:["Street food","Orecchiette"]},
+          {name:"Petruzzelli Theater & Boulevard", title:"Muziek en zee", text:"Bezoek het beroemde operagebouw en geniet van een ontspannen wandeling langs de boulevard.", time:"15:00 – 17:00", tags:["Petruzzelli Theater","Boulevard"]}
+        ]
+      },
+      {
+        kicker:"Trulli en barok", title:"Itria-vallei", subtitle:"Alberobello · Locorotondo · Martina Franca",
+        icon:"trullo",
+        note:"Het is uitstekend mogelijk om alle drie de parels van de Itria-vallei op één dag te bezoeken — UNESCO-trulli, een wit dorp op een heuvel en barokke elegantie, op slechts 10–15 minuten van elkaar.",
+        stops:[
+          {name:"Alberobello", title:"De hoofdstad van de trulli · UNESCO", text:"Rione Monti en Aia Piccola met meer dan 1.000 iconische trulli, de tweeverdiepingen Trullo Sovrano en de trullo-vormige kerk van Sint-Antonius.", caption:"Panoramisch uitzicht op het centrum met iconische conische stenen trulli.", tags:["Rione Monti","Trullo Sovrano","UNESCO"]},
+          {name:"Locorotondo", title:"Een van de mooiste dorpen van Italië", text:"Een cirkelvormig centrum met witte, bebloemde steegjes, traditionele \"cummerse\"-huizen en een panoramisch uitzichtpunt over de vallei.", caption:"De skyline van Locorotondo bij zonsondergang, omgeven door wijngaarden.", tags:["Cirkelvormig centrum","Cummerse","Uitzichtpunt"]},
+          {name:"Martina Franca", title:"Barokke elegantie", text:"De Basilica di San Martino, Piazza Maria Immacolata met halfronde bogengalerijen en het Palazzo Ducale met beschilderde zalen.", caption:"Piazza Maria Immacolata 's avonds verlicht, een barok meesterwerk.", tags:["Basilica San Martino","Palazzo Ducale"]}
+        ]
+      },
+      {
+        kicker:"Sassi en Murgia", title:"Matera, Altamura & Gravina", subtitle:"Tussen Basilicata en Apulië",
+        icon:"cave",
+        note:"Een unieke, begeleide dagtour om drie adembenemende juwelen tussen Basilicata en Apulië te ontdekken, met optioneel een proeverij van lokaal brood en streekproducten.",
+        stops:[
+          {name:"Matera", title:"Stad van de Sassi · UNESCO", text:"Wereldberoemd om de eeuwenoude Sassi (rotswoningen), UNESCO-werelderfgoed en Europese Culturele Hoofdstad 2019. Rotskerken met fresco's en indrukwekkende uitzichten over de kloof.", caption:"Panoramisch uitzicht op de Sassi bij zonsondergang.", tags:["Sassi","Rotskerken","UNESCO"]},
+          {name:"Altamura", title:"De leeuwin van Puglia", text:"De indrukwekkende romaanse kathedraal gebouwd door keizer Frederik II (1232) en het wereldberoemde DOP-brood. De sfeervolle \"claustri\" binnenpleintjes.", caption:"De kathedraal van Santa Maria Assunta.", tags:["Romaanse kathedraal","DOP-brood"]},
+          {name:"Gravina in Puglia", title:"De stad op de kloof", text:"De beroemde Aquaductbrug met twee rijen bogen (bekend van James Bond), het ondergrondse Gravina en de rotskerk van San Michele.", caption:"De historische Aquaductbrug.", tags:["Aquaductbrug","Ondergronds Gravina"]}
+        ]
+      }
+    ]
+  }
+};
+
+const ICONS = {
+  wave:'<svg viewBox="0 0 24 24" fill="none" stroke="#2C6E8E" stroke-width="1.8"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><circle cx="17" cy="6" r="3" stroke="#B9843B"/></svg>',
+  arch:'<svg viewBox="0 0 24 24" fill="none" stroke="#2C6E8E" stroke-width="1.8"><path d="M5 21V11a7 7 0 0114 0v10"/><path d="M5 21h14"/><path d="M9 21v-6M15 21v-6"/></svg>',
+  basilica:'<svg viewBox="0 0 24 24" fill="none" stroke="#2C6E8E" stroke-width="1.8"><path d="M4 21V10l4-4 4 4v11"/><path d="M12 21V7l4-4 4 4v14"/><path d="M4 21h16"/></svg>',
+  trullo:'<svg viewBox="0 0 24 24" fill="none" stroke="#2C6E8E" stroke-width="1.8"><path d="M6 21v-7a6 6 0 0112 0v7"/><circle cx="12" cy="4" r="1.4" fill="#B9843B" stroke="none"/><path d="M4 21h16"/></svg>',
+  cave:'<svg viewBox="0 0 24 24" fill="none" stroke="#2C6E8E" stroke-width="1.8"><path d="M3 21c0-6 4-9 9-9s9 3 9 9"/><path d="M3 21h18"/><path d="M8 21v-4a4 4 0 018 0v4"/></svg>'
+};
+
+let currentLang = 'it';
+
+function render(lang){
+  currentLang = lang;
+  const d = DATA[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(d[key] !== undefined) el.textContent = d[key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-html');
+    if(d[key] !== undefined) el.innerHTML = d[key];
+  });
+  document.querySelectorAll('#langSwitch button').forEach(b=>{
+    b.classList.toggle('active', b.getAttribute('data-lang')===lang);
+  });
+
+  const list = document.getElementById('tourList');
+  list.innerHTML = '';
+  d.tours.forEach((tour, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'tour-card';
+
+    const routeStrip = tour.stops.map((s,i)=>{
+      const sep = i < tour.stops.length-1 ? '<span class="route-line"></span>' : '';
+      return `<div class="route-stop"><span class="route-dot"></span><span class="route-name">${s.name}</span></div>${sep}`;
+    }).join('');
+
+    const stopsHtml = tour.stops.map((s,i)=>`
+      <div class="stop-block">
+        <div class="stop-num">${i+1}</div>
+        <div>
+          <h4>${s.time ? `<span class="time">${s.time}</span>`:''}${s.name} — <span style="font-weight:400;color:#5C6B78;">${s.title}</span></h4>
+          <p>${s.text}</p>
+          ${s.caption ? `<div class="caption">${s.caption}</div>`:''}
+          ${s.tags ? `<div class="highlight-tags">${s.tags.map(t=>`<span>${t}</span>`).join('')}</div>`:''}
+        </div>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="tour-head" data-toggle>
+        <div class="tour-head-left">
+          <div class="tour-icon">${ICONS[tour.icon]}</div>
+          <div class="tour-title-wrap">
+            <span class="kicker">${tour.kicker}</span>
+            <h3>${tour.title}</h3>
+            <div class="subtitle">${tour.subtitle}</div>
+          </div>
+        </div>
+        <div class="tour-badge">
+          <span class="duration">${d.durationLabel}</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="route-strip">${routeStrip}</div>
+      <div class="tour-body">
+        <div class="tour-body-inner">
+          ${stopsHtml}
+          <div class="tour-footer-note">${tour.note}</div>
+          <div class="book-row">
+            <a class="btn-primary" href="https://wa.me/393338550940?text=${encodeURIComponent('Ciao Giuseppe! Vorrei prenotare: '+tour.title)}" target="_blank">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.9-1.4A10 10 0 1012 2zm5.8 14.2c-.3.7-1.5 1.4-2.1 1.5-.6.1-1.2.2-4-.9-3.4-1.4-5.5-4.8-5.7-5-.2-.2-1.3-1.7-1.3-3.3 0-1.6.8-2.3 1.1-2.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.3.6.9 2.2 1 2.3.1.2.1.4 0 .6-.1.2-.2.3-.4.5-.2.2-.4.4-.5.6-.2.2-.4.4-.2.7.2.3 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.3.2.5.1.7-.1.2-.2.9-1 1.1-1.4.2-.3.5-.3.8-.2.3.1 1.9.9 2.2 1.1.3.1.5.2.6.4.1.2.1.9-.2 1.6z"/></svg>
+              ${d.bookBtn}
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+    card.querySelector('[data-toggle]').addEventListener('click', ()=>{
+      card.classList.toggle('open');
+    });
+    if(idx===0) card.classList.add('open');
+    list.appendChild(card);
+  });
+}
+
+document.getElementById('langSwitch').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  render(btn.getAttribute('data-lang'));
+});
+
+render('it');
+</script>
+
+</body>
+</html>
