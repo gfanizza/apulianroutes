@@ -513,26 +513,34 @@
   </div>
   <div class="topbar-actions">
     <div class="lang-dropdown">
-      <select id="langSelect" aria-label="Seleziona la lingua / Select language">
-        <option value="" selected disabled>Seleziona la lingua</option>
-        <option value="it">Italiano</option>
-        <option value="en">English</option>
-        <option value="fr">Français</option>
-        <option value="de">Deutsch</option>
-        <option value="es">Español</option>
-        <option value="pt">Português</option>
-        <option value="nl">Nederlands</option>
-        <option value="el">Ελληνικά</option>
-        <option value="ru">Русский</option>
-        <option value="pl">Polski</option>
-        <option value="ro">Română</option>
-        <option value="sv">Svenska</option>
-        <option value="tr">Türkçe</option>
-        <option value="ar">العربية</option>
-        <option value="zh-CN">中文</option>
-        <option value="ja">日本語</option>
-        <option value="ko">한국어</option>
-        <option value="hi">हिन्दी</option>
+      <!-- notranslate: senza questo Google traduce anche i nomi delle lingue e li
+           sbaglia (con target giapponese "Polski" diventa 研磨, "lucidatura").
+           Gli endonimi devono restare nella loro lingua. Le label degli optgroup
+           Google non le traduce comunque: vanno tenute neutre. -->
+      <select id="langSelect" class="notranslate" translate="no" aria-label="Seleziona la lingua / Select language">
+        <option value="" selected disabled>Lingua/Language</option>
+        <optgroup label="Original">
+          <option value="it">Italiano</option>
+          <option value="en">English</option>
+          <option value="nl">Nederlands</option>
+        </optgroup>
+        <optgroup label="Google Translate">
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="es">Español</option>
+          <option value="pt">Português</option>
+          <option value="el">Ελληνικά</option>
+          <option value="ru">Русский</option>
+          <option value="pl">Polski</option>
+          <option value="ro">Română</option>
+          <option value="sv">Svenska</option>
+          <option value="tr">Türkçe</option>
+          <option value="ar">العربية</option>
+          <option value="zh-CN">中文</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+          <option value="hi">हिन्दी</option>
+        </optgroup>
       </select>
     </div>
     <div id="google_translate_element"></div>
@@ -1183,31 +1191,79 @@ function render(lang, syncSelect=true){
   });
 }
 
+/* Lingue con traduzione scritta a mano (oggetto DATA). Tutte le altre voci del
+   menu passano da Google Translate, che traduce il DOM italiano al volo. */
+const NATIVE_LANGS = ['it','en','nl'];
+const RTL_LANGS = ['ar','he','fa','ur'];
+
+function applyDirection(code){
+  document.documentElement.dir = RTL_LANGS.indexOf(code) !== -1 ? 'rtl' : 'ltr';
+}
+
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
     pageLanguage: 'it',
     includedLanguages: 'en,fr,de,es,pt,nl,el,ru,pl,ro,sv,tr,ar,zh-CN,ja,ko,hi',
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    /* HORIZONTAL (non SIMPLE): è l'unico layout che genera il <select.goog-te-combo>
+       su cui si appoggia setGoogleTranslateLanguage. Con SIMPLE Google costruisce
+       un gadget a menu e il combo non esiste — il cambio lingua fallisce in silenzio. */
+    layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
     autoDisplay: false
   }, 'google_translate_element');
 }
 
-function setGoogleTranslateLanguage(code, attempts){
+function withTranslateCombo(fn, attempts){
   attempts = attempts || 0;
   const combo = document.querySelector('.goog-te-combo');
   if(combo){
+    fn(combo);
+  } else if(attempts < 40){
+    setTimeout(()=>withTranslateCombo(fn, attempts+1), 250);
+  }
+}
+
+function setGoogleTranslateLanguage(code){
+  withTranslateCombo(combo=>{
     combo.value = code;
     combo.dispatchEvent(new Event('change'));
-  } else if(attempts < 30){
-    setTimeout(()=>setGoogleTranslateLanguage(code, attempts+1), 250);
+    document.documentElement.lang = code;
+    applyDirection(code);
+  });
+}
+
+/* Il cookie googtrans sopravvive al reload: va azzerato esplicitamente quando si
+   torna a una lingua nativa, altrimenti Google ritraduce il DOM appena ridisegnato. */
+function clearGoogleTranslate(){
+  const host = location.hostname;
+  ['', '.' + host, host].forEach(domain=>{
+    document.cookie = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/' +
+      (domain ? ';domain=' + domain : '');
+  });
+  const combo = document.querySelector('.goog-te-combo');
+  if(combo && combo.value){
+    combo.value = '';
+    combo.dispatchEvent(new Event('change'));
   }
+}
+
+function googleTranslateActive(){
+  return /(^|;)\s*googtrans=/.test(document.cookie) ||
+         document.documentElement.className.indexOf('translated-') !== -1;
 }
 
 document.getElementById('langSelect').addEventListener('change', (e)=>{
   const val = e.target.value;
   if(!val) return;
   const sel = document.getElementById('langSelect');
-  if(val === 'it' || val === 'en' || val === 'nl'){
+  if(NATIVE_LANGS.indexOf(val) !== -1){
+    if(googleTranslateActive()){
+      /* Google ha già riscritto i nodi di testo: ricaricare senza cookie è l'unico
+         modo affidabile per riavere il DOM originale prima di applicare DATA[val]. */
+      clearGoogleTranslate();
+      sessionStorage.setItem('ar_lang', val);
+      location.reload();
+      return;
+    }
     render(val);
   } else {
     render('it', false);
@@ -1216,7 +1272,27 @@ document.getElementById('langSelect').addEventListener('change', (e)=>{
   }
 });
 
-render('it', false);
+/* Stato iniziale: lingua nativa scelta prima di un reload, oppure lingua Google
+   ancora attiva da una visita precedente (cookie googtrans=/it/xx). */
+(function initLanguage(){
+  const pending = sessionStorage.getItem('ar_lang');
+  if(pending && NATIVE_LANGS.indexOf(pending) !== -1){
+    sessionStorage.removeItem('ar_lang');
+    applyDirection(pending);
+    render(pending);
+    return;
+  }
+  applyDirection('it');
+  render('it', false);
+  const cookie = document.cookie.match(/(?:^|;)\s*googtrans=([^;]+)/);
+  const target = cookie && decodeURIComponent(cookie[1]).split('/')[2];
+  if(target){
+    const sel = document.getElementById('langSelect');
+    if(sel) sel.value = target;
+    document.documentElement.lang = target;
+    applyDirection(target);
+  }
+})();
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
