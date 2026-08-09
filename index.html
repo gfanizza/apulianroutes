@@ -421,11 +421,23 @@
   .route-name{font-size:0.86rem; font-weight:600; color:var(--inchiostro-2); white-space:nowrap;}
   .route-line{width:34px; height:1px; background:repeating-linear-gradient(90deg, var(--ocra) 0 5px, transparent 5px 9px); margin:0 8px;}
 
+  /* Altezza guidata dal contenuto: la griglia 0fr -> 1fr anima verso l'altezza
+     reale senza doverla conoscere in anticipo. Il precedente max-height:3200px
+     fisso tagliava le card da 5 tappe (contenuto ~3780px su desktop, dove
+     .stop-scene e' piu' larga e quindi piu' alta per via dell'aspect-ratio):
+     della quinta tappa restava visibile solo la parte alta della foto.
+     Serve anche perche' Google Translate allunga il testo in modo imprevedibile. */
   .tour-body{
-    max-height:0; overflow:hidden; transition:max-height .4s ease;
+    display:grid; grid-template-rows:0fr;
+    transition:grid-template-rows .4s ease;
     border-top:1px solid var(--line);
   }
-  .tour-card.open .tour-body{max-height:3200px;}
+  .tour-card.open .tour-body{grid-template-rows:1fr;}
+  /* Il grid item deve restare senza padding: min-height:0 azzera il minimo
+     automatico del content box, ma il padding continuerebbe a fare da base alla
+     riga e la card chiusa resterebbe alta 60px. Per questo il padding sta su
+     .tour-body-inner e il ritaglio su questo wrapper. */
+  .tour-body-clip{overflow:hidden; min-height:0;}
   .tour-body-inner{padding:26px 30px 34px;}
 
   .stop-block{
@@ -1171,6 +1183,7 @@ function render(lang, syncSelect=true){
       </div>
       <div class="route-strip">${routeStrip}</div>
       <div class="tour-body">
+        <div class="tour-body-clip">
         <div class="tour-body-inner">
           ${stopsHtml}
           <div class="tour-footer-note">${tour.note}</div>
@@ -1180,6 +1193,7 @@ function render(lang, syncSelect=true){
               ${d.bookBtn}
             </a>
           </div>
+        </div>
         </div>
       </div>
     `;
