@@ -509,6 +509,93 @@
   .btn-secondary{background:transparent; color:var(--inchiostro-2); border:1px solid var(--line);}
   .btn-primary svg,.btn-secondary svg{width:15px;height:15px;}
 
+  /* ---------- richiesta su misura ---------- */
+  .request{max-width:1080px; margin:56px auto 0; padding:0 22px;}
+  .request-card{
+    background:var(--calce); border:1px solid var(--line); border-radius:22px;
+    padding:38px 34px; box-shadow:var(--shadow);
+  }
+  .request .eyebrow{color:var(--ocra);}
+  .request h2{font-size:clamp(1.6rem,3.4vw,2.3rem); max-width:620px;}
+  .request .sub{margin:14px 0 0; color:#4B5A66; line-height:1.55; max-width:560px; font-size:0.95rem;}
+
+  .request fieldset{border:none; margin:0; padding:0; min-width:0;}
+  .request legend{padding:0;}
+
+  /* Il segmented control e' un radio group vero: i due <input> restano nel DOM
+     (navigazione con le frecce, annuncio "1 di 2" dagli screen reader) e sono
+     nascosti alla vista con la tecnica clip, non con display:none.
+     La <legend> resta figlia diretta del <fieldset>, che NON e' flex: Safari e
+     Firefox rendono la legend come caso speciale e dentro un flex container
+     finisce fuori posto. Il flex sta nel div interno. */
+  /* .request fieldset azzera i margini di tutti i fieldset ed e' piu' specifico
+     di .mode-fieldset: senza il prefisso questa regola non arriva mai a valere. */
+  .request .mode-fieldset{margin:34px 0 30px;}
+  .request .mode-fieldset legend{margin-bottom:14px; color:var(--ocra);}
+  .mode-switch{display:flex; gap:8px; flex-wrap:wrap;}
+  .mode-switch input{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+  }
+  .mode-switch label{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    padding:11px 20px; border-radius:999px; border:1px solid var(--line);
+    font-size:0.9rem; font-weight:600; color:#4B5A66; background:var(--pietra);
+    white-space:nowrap;
+    transition:background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .mode-switch input:checked + label{
+    background:var(--inchiostro); color:var(--calce); border-color:var(--inchiostro);
+  }
+  .mode-switch input:focus-visible + label{outline:3px solid var(--adriatico); outline-offset:2px;}
+  .mode-switch label svg{width:16px;height:16px;}
+
+  /* Qualsiasi regola di display batte il [hidden]{display:none} dello user agent,
+     che ha specificita' zero: .field-grid da sola lasciava visibile il blocco
+     "nascosto". Serve riaffermarlo per gli elementi del form. */
+  #requestForm [hidden]{display:none !important;}
+  .field-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px;}
+  .field{display:flex; flex-direction:column; gap:6px; min-width:0;}
+  .field.wide{grid-column:1 / -1;}
+  .field label{
+    font-family:'IBM Plex Mono',monospace; font-size:0.7rem; letter-spacing:0.08em;
+    text-transform:uppercase; color:#5C6B78;
+  }
+  .field input, .field select, .field textarea{
+    font-family:'Work Sans',sans-serif; font-size:0.95rem; color:var(--inchiostro);
+    background:var(--pietra); border:1px solid var(--line); border-radius:12px;
+    padding:12px 14px; width:100%; min-width:0;
+  }
+  .field textarea{resize:vertical; min-height:80px;}
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:2px solid var(--adriatico); outline-offset:1px; background:var(--calce);
+  }
+  /* Su iOS un input date/time vuoto collassa in altezza rispetto ai campi testo. */
+  .field input[type="date"], .field input[type="time"]{min-height:46px;}
+
+  .roundtrip{
+    display:flex; align-items:center; gap:10px; margin-top:18px;
+    font-size:0.92rem; font-weight:600; color:var(--inchiostro-2); cursor:pointer;
+  }
+  .roundtrip input{width:20px; height:20px; accent-color:var(--adriatico); cursor:pointer;}
+  .return-fields{margin-top:16px; padding-left:14px; border-left:2px solid var(--adriatico);}
+
+  .request-submit{
+    margin-top:28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .request-submit .btn-primary{background:#25D366; color:#0b3b1e; font-size:0.95rem; padding:14px 24px;}
+  .request-submit .btn-primary svg{width:18px;height:18px;}
+  .request-note{font-size:0.8rem; color:#8895A0; max-width:280px; line-height:1.45;}
+
+  @media(max-width:640px){
+    .request{padding:0 16px;}
+    .request-card{padding:28px 20px; border-radius:18px;}
+    .field-grid{grid-template-columns:1fr;}
+    /* flex:1 con basis 0 fa collassare la pill sul testo piu' corto e mandare a
+       capo "Tour su misura": le due voci partono dalla loro larghezza naturale. */
+    .mode-switch label{flex:1 1 auto; justify-content:center; padding:11px 14px; font-size:0.86rem;}
+  }
+
   /* ---------- why ---------- */
   .why{background:var(--inchiostro-2); color:var(--pietra); padding:72px 22px; margin-top:40px;}
   .why-inner{max-width:1080px; margin:0 auto;}
@@ -666,6 +753,124 @@
   <div id="tourList"></div>
 </main>
 
+<!-- Richiesta su misura: form senza backend. Il submit non invia nulla, compone
+     un messaggio WhatsApp precompilato. Nessun dato lascia il browser. -->
+<section class="request" id="richiesta">
+  <div class="request-card">
+    <span class="eyebrow" data-i18n="reqEyebrow">Su misura</span>
+    <h2 data-i18n="reqTitle">Nessuno di questi sei? Costruiamolo insieme.</h2>
+    <p class="sub" data-i18n="reqSub">Un itinerario disegnato su di te o un semplice transfer verso la tua meta. Compila i campi: si apre WhatsApp con il messaggio già pronto, tu premi invia.</p>
+
+    <form id="requestForm">
+      <fieldset class="mode-fieldset">
+        <legend class="eyebrow" data-i18n="reqModeLegend">Cosa ti serve</legend>
+        <div class="mode-switch">
+          <input type="radio" name="reqMode" id="modeTour" value="tour" checked>
+          <label for="modeTour">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s7-6.4 7-11a7 7 0 10-14 0c0 4.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span data-i18n="reqModeTour">Tour su misura</span>
+          </label>
+          <input type="radio" name="reqMode" id="modeTransfer" value="transfer">
+          <label for="modeTransfer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 16V9l2-4h11l3 4v7"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/><path d="M3 13h16"/></svg>
+            <span data-i18n="reqModeTransfer">Transfer</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- blocco TOUR -->
+      <div id="blockTour" class="field-grid">
+        <div class="field wide">
+          <label for="tourWish" data-i18n="reqWishLabel">Cosa vorresti vedere</label>
+          <input type="text" id="tourWish" name="tourWish" data-req
+                 data-i18n-ph="reqWishPh" placeholder="Trulli e Valle d'Itria, cantine, mare…">
+        </div>
+        <div class="field">
+          <label for="tourDate" data-i18n="reqDateLabel">Data</label>
+          <input type="date" id="tourDate" name="tourDate" data-req>
+        </div>
+        <div class="field">
+          <label for="tourLength" data-i18n="reqLengthLabel">Durata</label>
+          <select id="tourLength" name="tourLength">
+            <option value="half" data-i18n="reqLenHalf">Mezza giornata</option>
+            <option value="full" selected data-i18n="reqLenFull">Una giornata</option>
+            <option value="multi" data-i18n="reqLenMulti">Più giorni</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- blocco TRANSFER -->
+      <div id="blockTransfer" hidden>
+        <div class="field-grid">
+          <div class="field">
+            <label for="trFrom" data-i18n="reqFromLabel">Da</label>
+            <input type="text" id="trFrom" name="trFrom" data-req
+                   data-i18n-ph="reqFromPh" placeholder="Aeroporto di Bari, hotel a Ostuni…">
+          </div>
+          <div class="field">
+            <label for="trTo" data-i18n="reqToLabel">A</label>
+            <input type="text" id="trTo" name="trTo" data-req
+                   data-i18n-ph="reqToPh" placeholder="Alberobello, Matera, stazione…">
+          </div>
+          <div class="field">
+            <label for="trDate" data-i18n="reqDepDateLabel">Data andata</label>
+            <input type="date" id="trDate" name="trDate" data-req>
+          </div>
+          <div class="field">
+            <label for="trTime" data-i18n="reqDepTimeLabel">Ora andata</label>
+            <input type="time" id="trTime" name="trTime">
+          </div>
+        </div>
+
+        <label class="roundtrip" for="trRound">
+          <input type="checkbox" id="trRound" name="trRound">
+          <span data-i18n="reqRoundtrip">Andata e ritorno</span>
+        </label>
+
+        <div id="returnFields" class="return-fields field-grid" hidden>
+          <div class="field">
+            <label for="trRetDate" data-i18n="reqRetDateLabel">Data ritorno</label>
+            <input type="date" id="trRetDate" name="trRetDate" data-req>
+          </div>
+          <div class="field">
+            <label for="trRetTime" data-i18n="reqRetTimeLabel">Ora ritorno</label>
+            <input type="time" id="trRetTime" name="trRetTime">
+          </div>
+        </div>
+      </div>
+
+      <!-- campi comuni -->
+      <div class="field-grid" style="margin-top:22px">
+        <div class="field">
+          <label for="reqAdults" data-i18n="reqAdultsLabel">Adulti</label>
+          <input type="number" id="reqAdults" name="reqAdults" value="2" min="1" max="60" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="reqKids" data-i18n="reqKidsLabel">Bambini</label>
+          <input type="number" id="reqKids" name="reqKids" value="0" min="0" max="60" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="reqName" data-i18n="reqNameLabel">Il tuo nome</label>
+          <input type="text" id="reqName" name="reqName" autocomplete="given-name">
+        </div>
+        <div class="field wide">
+          <label for="reqNotes" data-i18n="reqNotesLabel">Note</label>
+          <textarea id="reqNotes" name="reqNotes" rows="3"
+                    data-i18n-ph="reqNotesPh" placeholder="Numero di volo, bagagli, esigenze particolari…"></textarea>
+        </div>
+      </div>
+
+      <div class="request-submit">
+        <button type="submit" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.9-1.4A10 10 0 1012 2zm5.8 14.2c-.3.7-1.5 1.4-2.1 1.5-.6.1-1.2.2-4-.9-3.4-1.4-5.5-4.8-5.7-5-.2-.2-1.3-1.7-1.3-3.3 0-1.6.8-2.3 1.1-2.7.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.3.6.9 2.2 1 2.3.1.2.1.4 0 .6-.1.2-.2.3-.4.5-.2.2-.4.4-.5.6-.2.2-.4.4-.2.7.2.3 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.3.2.5.1.7-.1.2-.2.9-1 1.1-1.4.2-.3.5-.3.8-.2.3.1 1.9.9 2.2 1.1.3.1.5.2.6.4.1.2.1.9-.2 1.6z"/></svg>
+          <span data-i18n="reqSubmit">Invia su WhatsApp</span>
+        </button>
+        <p class="request-note" data-i18n="reqNote">Nessun pagamento online: Giuseppe ti risponde con disponibilità e preventivo.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
 <section class="why">
   <div class="why-inner">
     <h2 data-i18n="whyTitle">Perché viaggiare con Giuseppe</h2>
@@ -729,6 +934,24 @@ const DATA = {
     footerMeta:"Giuseppe · Guida turistica · Puglia & Basilicata, Italia",
     durationLabel:"1 giorno · guida inclusa",
     detailsBtn:"Programma completo", bookBtn:"Prenota questo tour",
+    reqEyebrow:"Su misura",
+    reqTitle:"Nessuno di questi sei? Costruiamolo insieme.",
+    reqSub:"Un itinerario disegnato su di te o un semplice transfer verso la tua meta. Compila i campi: si apre WhatsApp con il messaggio già pronto, tu premi invia.",
+    reqModeLegend:"Cosa ti serve",
+    reqModeTour:"Tour su misura", reqModeTransfer:"Transfer",
+    reqWishLabel:"Cosa vorresti vedere", reqWishPh:"Trulli e Valle d'Itria, cantine, mare…",
+    reqDateLabel:"Data", reqLengthLabel:"Durata",
+    reqLenHalf:"Mezza giornata", reqLenFull:"Una giornata", reqLenMulti:"Più giorni",
+    reqFromLabel:"Da", reqFromPh:"Aeroporto di Bari, hotel a Ostuni…",
+    reqToLabel:"A", reqToPh:"Alberobello, Matera, stazione…",
+    reqDepDateLabel:"Data andata", reqDepTimeLabel:"Ora andata",
+    reqRoundtrip:"Andata e ritorno",
+    reqRetDateLabel:"Data ritorno", reqRetTimeLabel:"Ora ritorno",
+    reqAdultsLabel:"Adulti", reqKidsLabel:"Bambini",
+    reqNameLabel:"Il tuo nome", reqNotesLabel:"Note",
+    reqNotesPh:"Numero di volo, bagagli, esigenze particolari…",
+    reqSubmit:"Invia su WhatsApp",
+    reqNote:"Nessun pagamento online: Giuseppe ti risponde con disponibilità e preventivo.",
     tours:[
       {
         kicker:"Terra di Bari", title:"Costa e Borghi", subtitle:"",
@@ -816,6 +1039,24 @@ const DATA = {
     footerMeta:"Giuseppe · Licensed tour guide · Puglia & Basilicata, Italy",
     durationLabel:"1 day · guide included",
     detailsBtn:"Full programme", bookBtn:"Book this tour",
+    reqEyebrow:"Tailor-made",
+    reqTitle:"None of these six? Let's build yours.",
+    reqSub:"An itinerary designed around you, or simply a transfer to where you're headed. Fill in the fields: WhatsApp opens with the message ready — you just hit send.",
+    reqModeLegend:"What do you need",
+    reqModeTour:"Tailor-made tour", reqModeTransfer:"Transfer",
+    reqWishLabel:"What would you like to see", reqWishPh:"Trulli and Valle d'Itria, wineries, the coast…",
+    reqDateLabel:"Date", reqLengthLabel:"Length",
+    reqLenHalf:"Half day", reqLenFull:"One day", reqLenMulti:"Several days",
+    reqFromLabel:"From", reqFromPh:"Bari airport, a hotel in Ostuni…",
+    reqToLabel:"To", reqToPh:"Alberobello, Matera, the station…",
+    reqDepDateLabel:"Outbound date", reqDepTimeLabel:"Outbound time",
+    reqRoundtrip:"Return trip too",
+    reqRetDateLabel:"Return date", reqRetTimeLabel:"Return time",
+    reqAdultsLabel:"Adults", reqKidsLabel:"Children",
+    reqNameLabel:"Your name", reqNotesLabel:"Notes",
+    reqNotesPh:"Flight number, luggage, anything we should know…",
+    reqSubmit:"Send on WhatsApp",
+    reqNote:"No online payment: Giuseppe replies with availability and a quote.",
     tours:[
       {
         kicker:"Terra di Bari", title:"Coast and Villages", subtitle:"",
@@ -903,6 +1144,24 @@ const DATA = {
     footerMeta:"Giuseppe · Erkende reisgids · Puglia & Basilicata, Italië",
     durationLabel:"1 dag · gids inbegrepen",
     detailsBtn:"Volledig programma", bookBtn:"Boek deze tour",
+    reqEyebrow:"Op maat",
+    reqTitle:"Zit jouw tour er niet bij? Dan maken we hem samen.",
+    reqSub:"Een route op maat, of gewoon een transfer naar je bestemming. Vul de velden in: WhatsApp opent met het bericht klaar — jij hoeft alleen te versturen.",
+    reqModeLegend:"Wat heb je nodig",
+    reqModeTour:"Tour op maat", reqModeTransfer:"Transfer",
+    reqWishLabel:"Wat wil je zien", reqWishPh:"Trulli en Valle d'Itria, wijnhuizen, de kust…",
+    reqDateLabel:"Datum", reqLengthLabel:"Duur",
+    reqLenHalf:"Halve dag", reqLenFull:"Eén dag", reqLenMulti:"Meerdere dagen",
+    reqFromLabel:"Van", reqFromPh:"Luchthaven Bari, een hotel in Ostuni…",
+    reqToLabel:"Naar", reqToPh:"Alberobello, Matera, het station…",
+    reqDepDateLabel:"Datum heenreis", reqDepTimeLabel:"Tijd heenreis",
+    reqRoundtrip:"Ook terugreis",
+    reqRetDateLabel:"Datum terugreis", reqRetTimeLabel:"Tijd terugreis",
+    reqAdultsLabel:"Volwassenen", reqKidsLabel:"Kinderen",
+    reqNameLabel:"Je naam", reqNotesLabel:"Opmerkingen",
+    reqNotesPh:"Vluchtnummer, bagage, bijzonderheden…",
+    reqSubmit:"Verstuur via WhatsApp",
+    reqNote:"Geen online betaling: Giuseppe antwoordt met beschikbaarheid en een prijs.",
     tours:[
       {
         kicker:"Terra di Bari", title:"Kust en Dorpen", subtitle:"",
@@ -1268,6 +1527,12 @@ function render(lang, syncSelect=true){
     const key = el.getAttribute('data-i18n-html');
     if(d[key] !== undefined) el.innerHTML = d[key];
   });
+  /* I placeholder non sono nodi di testo: vanno scritti a parte, altrimenti il
+     form resta con i suggerimenti in italiano anche in EN/NL. */
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-ph');
+    if(d[key] !== undefined) el.placeholder = d[key];
+  });
   const langSelect = document.getElementById('langSelect');
   if(langSelect && syncSelect) langSelect.value = lang;
 
@@ -1443,6 +1708,178 @@ document.getElementById('langSelect').addEventListener('change', (e)=>{
     /* Nessuna traduzione attiva: il select mostra "Italiano", non il placeholder. */
     sel.value = 'it';
   }
+})();
+
+/* ------------------------------------------------------------------
+   Richiesta su misura → WhatsApp
+
+   Il form non ha backend: intercetta il submit, compone un messaggio e apre
+   wa.me con il testo gia' scritto. Nessun dato lascia il browser, niente da
+   dichiarare in privacy policy oltre a quello che c'e' gia'.
+   ------------------------------------------------------------------ */
+const WA_NUMBER = '393338550940';
+
+/* Etichette del messaggio, separate da DATA perche' il destinatario e' Giuseppe,
+   non l'utente: servono solo nelle tre lingue che parla. Chi naviga in una lingua
+   Google Translate riceve il messaggio in inglese (vedi msgLang()). */
+const MSG = {
+  it:{
+    introTour:'Ciao Giuseppe! Vorrei un *tour su misura*.',
+    introTransfer:'Ciao Giuseppe! Vorrei un *transfer*.',
+    wish:'Cosa vorrei vedere', length:'Durata', date:'Data',
+    from:'Da', to:'A', out:'Andata', ret:'Ritorno', at:'alle',
+    people:'Persone', adults:'adulti', adult:'adulto', kids:'bambini', kid:'bambino',
+    name:'Nome', notes:'Note',
+    len:{half:'Mezza giornata', full:'Una giornata', multi:'Più giorni'},
+    locale:'it-IT'
+  },
+  en:{
+    introTour:'Hi Giuseppe! I would like a *tailor-made tour*.',
+    introTransfer:'Hi Giuseppe! I would like a *transfer*.',
+    wish:'What I would like to see', length:'Length', date:'Date',
+    from:'From', to:'To', out:'Outbound', ret:'Return', at:'at',
+    people:'People', adults:'adults', adult:'adult', kids:'children', kid:'child',
+    name:'Name', notes:'Notes',
+    len:{half:'Half day', full:'One day', multi:'Several days'},
+    locale:'en-GB'
+  },
+  nl:{
+    introTour:'Hoi Giuseppe! Ik wil graag een *tour op maat*.',
+    introTransfer:'Hoi Giuseppe! Ik wil graag een *transfer*.',
+    wish:'Wat ik graag wil zien', length:'Duur', date:'Datum',
+    from:'Van', to:'Naar', out:'Heenreis', ret:'Terugreis', at:'om',
+    people:'Personen', adults:'volwassenen', adult:'volwassene', kids:'kinderen', kid:'kind',
+    name:'Naam', notes:'Opmerkingen',
+    len:{half:'Halve dag', full:'Eén dag', multi:'Meerdere dagen'},
+    locale:'nl-NL'
+  }
+};
+
+/* Con Google Translate attivo currentLang resta 'it' (il DOM di partenza e'
+   italiano), ma l'utente non legge italiano: meglio l'inglese, che Giuseppe
+   parla comunque. */
+function msgLang(){
+  if(googleTranslateActive()) return MSG.en;
+  return MSG[currentLang] || MSG.en;
+}
+
+/* Le date arrivano come YYYY-MM-DD. Tutte e tre le locale scrivono il giorno per
+   primo: nessuna ambiguita' 08/12 vs 12/08 per chi legge il messaggio. */
+function formatDate(value, locale){
+  if(!value) return '';
+  const d = new Date(value + 'T00:00:00');
+  if(isNaN(d)) return value;
+  return d.toLocaleDateString(locale, {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+
+function dateTimeLine(dateVal, timeVal, m){
+  const d = formatDate(dateVal, m.locale);
+  if(!d) return '';
+  return timeVal ? `${d} ${m.at} ${timeVal}` : d;
+}
+
+(function initRequestForm(){
+  const form = document.getElementById('requestForm');
+  if(!form) return;
+
+  const blocks = {
+    tour: document.getElementById('blockTour'),
+    transfer: document.getElementById('blockTransfer')
+  };
+  const roundCheck  = document.getElementById('trRound');
+  const returnBlock = document.getElementById('returnFields');
+  const depDate     = document.getElementById('trDate');
+  const retDate     = document.getElementById('trRetDate');
+
+  /* Un campo required dentro un blocco hidden blocca il submit senza mostrare
+     nulla: il browser non puo' puntare il messaggio a un campo invisibile.
+     required va acceso e spento insieme alla visibilita'. */
+  function setBlock(el, visible){
+    if(!el) return;
+    el.hidden = !visible;
+    el.querySelectorAll('[data-req]').forEach(f=>{ f.required = visible; });
+  }
+
+  function currentMode(){
+    const checked = form.querySelector('input[name="reqMode"]:checked');
+    return checked ? checked.value : 'tour';
+  }
+
+  function syncMode(){
+    const mode = currentMode();
+    setBlock(blocks.tour, mode === 'tour');
+    setBlock(blocks.transfer, mode === 'transfer');
+    /* Il ritorno resta subordinato alla spunta anche quando si torna su Transfer. */
+    syncRoundtrip();
+  }
+
+  function syncRoundtrip(){
+    const on = currentMode() === 'transfer' && roundCheck.checked;
+    setBlock(returnBlock, on);
+  }
+
+  form.querySelectorAll('input[name="reqMode"]').forEach(r=>{
+    r.addEventListener('change', syncMode);
+  });
+  roundCheck.addEventListener('change', syncRoundtrip);
+
+  /* Nessuna partenza nel passato, nessun ritorno prima dell'andata. */
+  const today = new Date().toISOString().slice(0,10);
+  ['tourDate','trDate','trRetDate'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.min = today;
+  });
+  depDate.addEventListener('change', ()=>{
+    retDate.min = depDate.value || today;
+    if(retDate.value && retDate.value < retDate.min) retDate.value = depDate.value;
+  });
+
+  function peopleLine(m){
+    const a = parseInt(document.getElementById('reqAdults').value, 10) || 0;
+    const k = parseInt(document.getElementById('reqKids').value, 10) || 0;
+    const parts = [];
+    if(a > 0) parts.push(`${a} ${a === 1 ? m.adult : m.adults}`);
+    if(k > 0) parts.push(`${k} ${k === 1 ? m.kid : m.kids}`);
+    return parts.join(', ');
+  }
+
+  function buildMessage(){
+    const m = msgLang();
+    const mode = currentMode();
+    const lines = [mode === 'transfer' ? m.introTransfer : m.introTour, ''];
+    /* push solo se il valore c'e': meglio una riga in meno che un'etichetta vuota. */
+    const add = (label, value)=>{ if(value) lines.push(`${label}: ${value}`); };
+
+    if(mode === 'transfer'){
+      add(m.from, document.getElementById('trFrom').value.trim());
+      add(m.to,   document.getElementById('trTo').value.trim());
+      add(m.out,  dateTimeLine(depDate.value, document.getElementById('trTime').value, m));
+      if(roundCheck.checked){
+        add(m.ret, dateTimeLine(retDate.value, document.getElementById('trRetTime').value, m));
+      }
+    } else {
+      add(m.wish, document.getElementById('tourWish').value.trim());
+      add(m.date, formatDate(document.getElementById('tourDate').value, m.locale));
+      add(m.length, m.len[document.getElementById('tourLength').value]);
+    }
+
+    add(m.people, peopleLine(m));
+    add(m.name,   document.getElementById('reqName').value.trim());
+    add(m.notes,  document.getElementById('reqNotes').value.trim());
+    return lines.join('\n');
+  }
+
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    if(!form.reportValidity()) return;
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
+    /* window.open puo' tornare null se il browser blocca comunque il popup:
+       in quel caso si naviga nella stessa scheda, che apre l'app lo stesso. */
+    const win = window.open(url, '_blank', 'noopener');
+    if(!win) location.href = url;
+  });
+
+  syncMode();
 })();
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
